@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+_install() {
+	apt install -y zip
+	local install_type=$1
+	local version=$2
+	version1=$(echo $version | sed 's/^v//')
+	local install_path=$3
+	tmpd=$(mktemp -d)
+	cd $tmpd
+	source_path="https://github.com/ossrs/srs/archive/${version}.tar.gz"
+	curl -L $source_path -o ${version}.tar.gz
+	tar -xzf ${version}.tar.gz
+	rm ${version}.tar.gz
+	cd srs-${version1}/trunk
+	#cd ./trunk/3rdparty
+        #unzip -o http-parser-2.1.zip
+        #sed -e s/FALLTROUGH/FALLTHROUGH/ -i ./http-parser-2.1/http_parser.c
+        #zip http-parser-2.1.zip http-parser-2.1/*
+	#cd $tmpd/srs-${version1}/trunk
+        ./configure --prefix=$install_path --jobs=$(nproc) --without-ffmpeg
+        make
+        make install
+	rm -rf $tmpd
+}
+
+_install $ASDF_INSTALL_TYPE $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH

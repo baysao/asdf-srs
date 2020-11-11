@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+echo $(curl -s https://api.github.com/repos/ossrs/srs/tags | grep -oP '"name": "\K(.*)(?=")')
